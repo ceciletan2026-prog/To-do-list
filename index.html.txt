@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Personal Log</title>
+    <!-- Basic PWA setup -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        :root { --bg: #f4f7f6; --text: #333; --accent: #2c3e50; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        h1 { font-weight: 700; color: var(--accent); }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
+        button { background: var(--accent); color: white; border: none; font-weight: bold; cursor: pointer; }
+        ul { list-style: none; padding: 0; }
+        li { background: white; padding: 15px; margin-bottom: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .delete-btn { background: #e74c3c; width: auto; padding: 5px 10px; margin: 0; }
+    </style>
+</head>
+<body>
+
+    <h1>Project Log</h1>
+    
+    <div class="card">
+        <input type="text" id="taskInput" placeholder="New task or repair note...">
+        <button onclick="addTask()">Add to List</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+    <script>
+        // Load data from phone storage on startup
+        let tasks = JSON.parse(localStorage.getItem('myTasks')) || [];
+
+        function renderTasks() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = tasks.map((t, i) => `
+                <li>
+                    ${t}
+                    <button class="delete-btn" onclick="deleteTask(${i})">Done</button>
+                </li>
+            `).join('');
+            localStorage.setItem('myTasks', JSON.stringify(tasks));
+        }
+
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            if (input.value) {
+                tasks.push(input.value);
+                input.value = '';
+                renderTasks();
+            }
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            renderTasks();
+        }
+
+        renderTasks();
+    </script>
+</body>
+</html>
